@@ -52,6 +52,7 @@ Example ways this AOS supports a small business:
 
 ## 2. Core Documents
 - [OpenClaw Agentic Operating System Build Procedure](OpenClaw-Agentic-Operating-System-Build-Procedure.md)
+- [AOS Startup Procedure](AOS-Startup-Procedure.md)
 - [Discord Roles and Tasks](Discord-Roles-and-Tasks.md)
 - [LLM Roles and Tasks](LLM-Roles-and-Tasks.md)
 - [Obsidian Roles and Tasks](Obsidian-Roles-and-Tasks.md)

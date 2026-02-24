@@ -2,14 +2,14 @@
 
 ## Document Control
 - **Owner:**
-- **Version:** 1.2.0
-- **Last Updated:** 2026-02-23
+- **Version:** 1.3.0
+- **Last Updated:** 2026-02-24
 - **Status:** Draft
 
 ## 1. Objective
 Deploy and operate an OpenClaw Agentic Operating System instance with:
 - OpenClaw gateway on a Linux VPS (always-on)
-- Ollama inference on local WSL2
+- Ollama inference on local Windows host
 - Discord as the only bot interface
 - Private connectivity via Tailscale
 
@@ -42,8 +42,8 @@ This SOP does not cover:
 | Layer | Component | Location | Connectivity |
 |---|---|---|---|
 | Interface | Discord Bot | Discord Cloud | HTTPS to VPS |
-| Gateway | OpenClaw | VPS (Ubuntu 24.04 LTS) | Tailscale to WSL2 |
-| Inference | Ollama | Local WSL2 Ubuntu | Bound to Tailscale/localhost only |
+| Gateway | OpenClaw | VPS (Ubuntu 24.04 LTS) | Tailscale to local Windows host |
+| Inference | Ollama | Local Windows host | Bound to Tailscale/localhost only |
 | Knowledge | Obsidian Vault/API (optional) | Local machine | Tailscale-restricted |
 
 > **Plain-English Note:** "Architecture" is just the map of where each part lives and how they talk to each other.
@@ -57,6 +57,13 @@ This SOP does not cover:
 - Discord Developer Portal access
 - Tailscale account
 
+### 4.1.1 Operator Access Standard (Recommended)
+- Use one standard browser type for all operator web tasks (Discord admin, Tailscale admin, and VPS provider panel).
+- Use one primary operator login identity/credential set per environment where policy allows.
+- Keep credentials in an approved password manager and use auto-fill to reduce login friction and credential-entry errors.
+
+> **Plain-English Note:** Standardizing browser and login flow reduces failed sign-ins, saves time during setup/startup, and lowers copy/paste password mistakes.
+
 > **Plain-English Note:** These are the keys you need before starting. If one key is missing, setup usually stops midway.
 
 ### 4.2 Version Baseline
@@ -66,7 +73,7 @@ This SOP does not cover:
 | Node.js | 22.12.0+ LTS |
 | pnpm | latest stable |
 | OpenClaw | current stable repository default branch |
-| WSL | WSL2 + Ubuntu |
+| Windows (Local Host) | Windows 11 (current stable) |
 | Ollama | latest stable |
 
 > **Plain-English Note:** Matching versions matter because many setup errors happen when tools are too old or incompatible.
@@ -108,7 +115,7 @@ Store all secrets in **.env** files only. Never commit secrets.
 | VPS IPv4 | |
 | VPS Hostname | |
 | VPS Tailscale IP | |
-| Local Tailscale IP | |
+| Local Windows Tailscale IP | |
 | Discord Application ID | |
 | Discord Bot User ID | |
 | Allowed Discord User ID(s) | |
@@ -123,17 +130,57 @@ Store all secrets in **.env** files only. Never commit secrets.
 ### Actions
 1. SSH to VPS as root and patch system:
 	- **apt update && apt upgrade -y**
+	- **Command Breakdown:** Refresh package lists, then install updates automatically if the first command succeeds.
 2. Create operational user and grant sudo:
 	- **adduser openclaw**
+	- **Command Breakdown:** Create a new Linux user named **openclaw**.
 	- **usermod -aG sudo openclaw**
+	- **Command Breakdown:** Add **openclaw** to the **sudo** group so the user can run admin commands.
+
+> **IMPORTANT:** WRITE DOWN THE NEW USERNAME AND PASSWORD IMMEDIATELY AND STORE THEM IN YOUR APPROVED PASSWORD MANAGER.
 3. Install baseline packages:
 	- **apt install -y git curl ca-certificates**
+	- **Command Breakdown:** Install Git, curl, and trusted TLS certificates with automatic yes to prompts.
 4. Install Node.js 22.x and pnpm as **openclaw** user.
+	- **Action Rationale:** This sets up the JavaScript runtime and package manager OpenClaw needs to install dependencies and build/run correctly.
+
+#### Detailed Node.js 22.x + pnpm Installation (Ubuntu 24.04)
+1. Switch to a fresh **openclaw** login shell:
+	- **su - openclaw**
+	- **Command Breakdown:** Switch to the **openclaw** account and load its full login environment.
+
+> **Plain-English Note:** Keep a space on both sides of the hyphen in **su - openclaw**. Without the space before **openclaw**, the shell may parse it incorrectly and fail.
+2. Install NodeSource repository prerequisites:
+	- **sudo apt update**
+	- **Command Breakdown:** Refresh package metadata with admin privileges.
+	- **sudo apt install -y ca-certificates curl gnupg**
+	- **Command Breakdown:** Install security and download tools needed to add and trust the Node.js repository.
+3. Add Node.js 22.x repository and install Node.js:
+	- **curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -**
+	- **Command Breakdown:** Download the NodeSource setup script and run it as admin to add the Node.js 22.x repo.
+	- **sudo apt install -y nodejs**
+	- **Command Breakdown:** Install Node.js (and npm) from the newly added repository.
+4. Enable Corepack and activate pnpm:
+	- **corepack enable**
+	- **Command Breakdown:** Turn on Corepack so Node can manage package managers like pnpm.
+	- **corepack prepare pnpm@latest --activate**
+	- **Command Breakdown:** Download the latest pnpm release and set it as the active pnpm version.
+5. Verify install:
+	- **node -v**
+	- **Command Breakdown:** Show the installed Node.js version.
+	- **pnpm -v**
+	- **Command Breakdown:** Show the installed pnpm version.
+
+> **Plain-English Note:** Corepack ships with modern Node.js and manages pnpm versions reliably without a separate global npm install.
+
+> **Plain-English Note:** **ca-certificates** installs trusted root certificates so HTTPS connections (like package downloads and Git operations) can be validated securely.
 
 ### Validation Gate A
 - **node -v** returns 22.x
 - **pnpm -v** returns installed version
 - **id openclaw** shows sudo group membership
+
+> **Plain-English Note:** **id openclaw** prints that user’s group memberships; confirm **sudo** appears in the list.
 
 > **Plain-English Note:** A validation gate is a checkpoint. Don’t continue until each checkpoint passes.
 
@@ -149,9 +196,20 @@ Store all secrets in **.env** files only. Never commit secrets.
 
 ### Actions
 1. Install Tailscale on VPS and authenticate.
-2. Install Tailscale on Windows host (preferred over WSL-only install).
+2. Install Tailscale on Windows host.
 3. Record both node IPv4 Tailscale addresses.
-4. Enable MagicDNS in Tailscale admin console (recommended).
+4. Enable MagicDNS in the Tailscale web Admin Console (**https://login.tailscale.com/admin/dns**) (recommended).
+
+> **Why Windows host is standard:**
+> - **Reliability:** The Windows Tailscale app stays running in the background for predictable reachability.
+> - **Operational Simplicity:** One primary local network client is easier to monitor and troubleshoot.
+> - **Consistency:** Startup and recovery steps are simpler when local inference and local networking are both managed on Windows.
+
+> **Action Rationale (Quick Why):**
+> - Step 1 makes the VPS join your private tailnet so it can talk safely to your local machine.
+> - Step 2 gives your local host a stable private route to the VPS and back.
+> - Step 3 gives you known-good target addresses for testing, config, and troubleshooting.
+> - Step 4 lets you use stable device names instead of changing IPs.
 
 ### Validation Gate B
 - VPS can reach local machine over Tailscale.
@@ -164,20 +222,28 @@ Store all secrets in **.env** files only. Never commit secrets.
 - If connectivity is unstable, re-authenticate both nodes and re-check ACL policy.
 - Temporarily pause deployment until stable point-to-point routing is restored.
 
-## 8. Phase C - Local Inference Node (WSL2 + Ollama)
+## 8. Phase C - Local Inference Node (Windows + Ollama)
 
 > **Why this phase matters:** This is where the AI model actually runs. The VPS sends requests here for answers.
 
 ### Actions
-1. Install Ollama in WSL2 Ubuntu.
+1. Install Ollama on Windows host.
 2. Pull required model(s) (example: Llama/Mistral family).
 3. Configure Ollama binding policy:
 	- Preferred: localhost + controlled forwarding
 	- Alternative: Tailscale interface only
 4. Configure Windows firewall inbound rule for required local ports, scoped to private/Tailscale profile only.
 
+> **Action Rationale (Quick Why):**
+> - Step 1 installs the local AI runtime your VPS will call.
+> - Step 2 downloads the actual models used to answer requests.
+> - Step 3 controls where Ollama listens so trusted systems can reach it without public exposure.
+> - Step 4 allows required traffic while keeping access restricted to safer network scopes.
+
 ### Validation Gate C
-- From VPS, **curl http://<LOCAL-TAILSCALE-IP>:11434** returns Ollama service response.
+- From VPS, **curl http://<LOCAL-WINDOWS-TAILSCALE-IP>:11434** returns Ollama service response.
+
+> **Plain-English Note:** This curl check confirms network reachability to Ollama from the VPS; if it fails, check Tailscale route, firewall scope, and Ollama bind settings.
 - Inference test call returns model output.
 - Endpoint is not exposed publicly.
 
@@ -198,6 +264,13 @@ Store all secrets in **.env** files only. Never commit secrets.
 4. Record bot token and channel IDs in secure **.env** on VPS.
 5. Configure user-ID allowlist in OpenClaw logic.
 
+> **Action Rationale (Quick Why):**
+> - Step 1 creates the Discord identity OpenClaw uses to interact with your server.
+> - Step 2 allows the bot to receive the events/messages needed for command handling.
+> - Step 3 limits bot privileges to reduce risk if something is misconfigured.
+> - Step 4 stores sensitive values outside source files for safer operations.
+> - Step 5 restricts command execution to approved users only.
+
 ### Validation Gate D
 - Bot appears online in target Discord server.
 - Command from allowed user receives expected response.
@@ -216,19 +289,29 @@ Store all secrets in **.env** files only. Never commit secrets.
 ### Actions
 1. As **openclaw** user, clone repository:
 	- **git clone https://github.com/OpenClaw/OpenClaw.git**
+	- **Command Breakdown:** Copy the OpenClaw code from GitHub to your VPS.
 2. Install/build:
 	- **pnpm install**
+	- **Command Breakdown:** Install all project dependencies.
 	- **pnpm run build**
+	- **Command Breakdown:** Build the project into runnable output files.
 3. Run wizard/config with these mandatory choices:
 	- Messenger: **Discord only**
 	- LLM provider: **Ollama**
-	- Ollama endpoint: **http://<LOCAL-TAILSCALE-IP>:11434**
+	- Ollama endpoint: **http://<LOCAL-WINDOWS-TAILSCALE-IP>:11434**
 4. Populate **.env** and verify no secrets in tracked files.
 5. Apply security configuration baseline:
 	- Keep **gateway.bind** set to loopback.
 	- Keep Discord DM policy in pairing mode unless explicitly justified.
 	- Configure allowlists for trusted users/channels.
 	- Run initial **openclaw security audit --deep** and resolve high-risk findings.
+
+> **Action Rationale (Quick Why):**
+> - Step 1 gets the application code onto the VPS.
+> - Step 2 installs dependencies and builds runnable artifacts.
+> - Step 3 ensures runtime choices match this SOP (Discord + Ollama + private endpoint).
+> - Step 4 wires secrets/config values needed at startup.
+> - Step 5 applies the baseline protections before production use.
 
 ### Validation Gate E
 - Startup completes without fatal errors.
@@ -256,6 +339,13 @@ Store all secrets in **.env** files only. Never commit secrets.
 	- OpenClaw repository updates
 5. Define backup cadence for Obsidian vault and config snapshots.
 
+> **Action Rationale (Quick Why):**
+> - Step 1 keeps the app running and helps automatic recovery after crashes.
+> - Step 2 restores service automatically after reboot.
+> - Step 3 gives you traceable logs for debugging, incidents, and audits.
+> - Step 4 keeps software current and reduces security/stability risk over time.
+> - Step 5 ensures you can recover important data and config after failures.
+
 ### Validation Gate F
 - Service survives reboot.
 - Service auto-recovers after process crash.
@@ -270,7 +360,7 @@ Store all secrets in **.env** files only. Never commit secrets.
 
 ## 12. Acceptance Criteria (Go-Live)
 - [ ] Discord-only path verified (no Telegram/other messenger dependencies)
-- [ ] VPS and local node communicate only through trusted network path
+- [ ] VPS and local Windows inference host communicate only through trusted network path
 - [ ] Ollama endpoint reachable from VPS and not publicly exposed
 - [ ] User allowlist enforcement confirmed
 - [ ] Secrets stored only in **.env** and excluded from version control
@@ -313,7 +403,6 @@ Store all secrets in **.env** files only. Never commit secrets.
 | Term | Simple Meaning |
 |---|---|
 | VPS | A cloud computer that stays online all the time. |
-| WSL2 | A Linux environment running on your Windows PC. |
 | Gateway | The part that receives requests and routes them to the right place. |
 | Inference | The AI model generating an answer from your prompt. |
 | Ollama | Software that runs AI models on your machine. |
@@ -351,7 +440,7 @@ Store all secrets in **.env** files only. Never commit secrets.
 | **git clone https://github.com/OpenClaw/OpenClaw.git** | Downloads the OpenClaw code repository. | Gets the application onto the VPS for installation. |
 | **pnpm install** | Installs project dependencies. | Prepares OpenClaw to build and run. |
 | **pnpm run build** | Compiles/builds the project. | Produces the runnable app artifacts. |
-| **curl http://<LOCAL-TAILSCALE-IP>:11434** | Sends a test request to Ollama. | Confirms VPS can reach your local inference service. |
+| **curl http://<LOCAL-WINDOWS-TAILSCALE-IP>:11434** | Sends a test request to Ollama. | Confirms VPS can reach your local inference service. |
 | **systemctl status <service>** | Shows service health and state. | Verifies OpenClaw service is running correctly. |
 | **journalctl -u <service>** | Shows logs for one Linux service. | Helps troubleshoot startup/auth/connectivity issues. |
 | **ssh <user>@<server-ip>** | Opens a secure remote shell session. | Connects you to the VPS to perform setup and operations. |
@@ -370,9 +459,9 @@ Store all secrets in **.env** files only. Never commit secrets.
 - **Backup** keeps older recoverable versions.
 - If a bad change is synced everywhere, backup is what lets you restore a good version.
 
-### 17.3 WSL2 Availability Reminder
+### 17.3 Local Host Availability Reminder
 - If your local PC sleeps or shuts down, the VPS cannot reach your local Ollama service.
-- For dependable operation windows, keep the local inference host awake and connected.
+- For dependable operation windows, keep the local Windows inference host awake and connected.
 
 ### 17.4 MagicDNS Practical Note
 - Enabling MagicDNS can reduce breakage from changing local network details.
@@ -438,6 +527,14 @@ Each test must complete the full handshake and produce valid artifact references
 ## 20. Revision History
 | Date | Version | Author | Change |
 |---|---|---|---|
+| 2026-02-24 | 1.3.0 | | Migrated architecture references from WSL2 inference host to native Windows Ollama host across objective, topology, phases, glossary, and validation examples |
+| 2026-02-24 | 1.2.7 | | Added explicit rationale for using Windows-host Tailscale over WSL-only in Phase B |
+| 2026-02-24 | 1.2.6 | | Added missing rationale for Phase A Step 4 to complete action-level clarity coverage |
+| 2026-02-24 | 1.2.5 | | Added clear action-rationale notes for non-obvious steps across Phases B-F |
+| 2026-02-24 | 1.2.4 | | Simplified inline command breakdown notes into shorter one-sentence explanations |
+| 2026-02-24 | 1.2.3 | | Added training-focused command breakdown notes across command-driven build steps |
+| 2026-02-24 | 1.2.2 | | Added detailed step-by-step Node.js 22.x and pnpm installation instructions for the openclaw user |
+| 2026-02-24 | 1.2.1 | | Added recommended operator browser/login standard for easier and safer access workflows |
 | 2026-02-23 | 1.2.0 | | Security Hardening v1: added trust-boundary controls, loopback/DM baseline, Node 22.12+ floor, audit, and sandbox go-live requirements |
 | 2026-02-23 | 1.1.1 | | Renamed procedure to OpenClaw Agentic Operating System Build Procedure and aligned cross-document references |
 | 2026-02-23 | 1.1.0 | | Added Agentic Operating System framing, linked operating docs, interoperability requirements, and build readiness checklist |

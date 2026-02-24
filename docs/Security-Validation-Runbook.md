@@ -22,6 +22,7 @@ Execute in this order to ensure consistent evidence collection.
 - Verify gateway bind is loopback-only.
 - Confirm no unintended public bind (**0.0.0.0**) is active.
 - Validate remote access path is SSH tunnel or tailnet-based.
+- Validate Ollama on local Windows host is reachable from VPS only via trusted tailnet path and is not publicly exposed.
 
 **Pass Criteria**
 - Gateway is loopback-bound and remote access is controlled.
@@ -137,4 +138,5 @@ Execute in this order to ensure consistent evidence collection.
 ## 10. Revision History
 | Date | Version | Change |
 |---|---|---|
+| 2026-02-24 | 1.1.0 | Added explicit Windows-host Ollama exposure validation to Step 1 for native-Windows inference architecture alignment |
 | 2026-02-23 | 1.0.0 | Initial monthly security validation runbook for OpenClaw Agentic Operating System |
