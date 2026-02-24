@@ -19,11 +19,11 @@ How it works in practice:
 5. Discord returns status, outputs, and trace links.
 
 #### Example Scenario: Product Campaign Research to Action
-1. The operator asks in `#prd-widget-marketing`: "Find 3 competitor campaigns this week and propose one test we can run."
+1. The operator asks in **#prd-widget-marketing**: "Find 3 competitor campaigns this week and propose one test we can run."
 2. OpenClaw classifies the request as product research and applies internet tier controls (R2 by default for product marketing).
 3. LLM policy selects model class and token budget, then runs staged retrieval (search -> triage -> synthesis).
 4. OpenClaw posts a concise recommendation in Discord with source citations and confidence notes.
-5. OpenClaw writes a structured artifact to Obsidian with `request_id`, `project_id`, sources, rationale, and next action.
+5. OpenClaw writes a structured artifact to Obsidian with **request_id**, **project_id**, sources, rationale, and next action.
 6. The operator approves the suggested test, and the resulting action is logged in change records for review.
 
 ### 1.2 Cost Control Summary
@@ -42,7 +42,7 @@ Primary security protocols used by this AOS:
 - Least-privilege bot and role permissions.
 - Sandbox policy for shared/non-main execution contexts.
 - Trust-boundary split when operators are mutually untrusted.
-- Monthly security audit (`openclaw security audit --deep`) and remediation tracking.
+- Monthly security audit (**openclaw security audit --deep**) and remediation tracking.
 
 ### 1.4 Small Business Support Examples
 Example ways this AOS supports a small business:
@@ -57,6 +57,9 @@ Example ways this AOS supports a small business:
 - [Obsidian Roles and Tasks](Obsidian-Roles-and-Tasks.md)
 - [OpenClaw Skills Specification and Readiness (Customized for the OpenClaw Agentic Operating System)](OpenClaw-Skills-for-Agentic-Operating-System.md)
 - [OpenClaw Agentic Operating System Security Validation Runbook](Security-Validation-Runbook.md)
+
+## 2.1 Project Onboarding
+- [AOS Project Startup Guide](Project-Startup-Guide.md)
 
 ## 3. Interoperability Summary
 ### 3.1 System Handshake
@@ -79,45 +82,45 @@ Example ways this AOS supports a small business:
 - DM policy defaults to pairing with allowlist approval flow.
 - Shared/non-main channel execution uses sandbox profile.
 - Trust boundaries are split by gateway/host when operators are mutually untrusted.
-- Monthly `openclaw security audit --deep` review is required.
+- Monthly **openclaw security audit --deep** review is required.
 - Internet research access follows tiered controls and context/citation requirements in the LLM policy.
 
 ## 4. Shared Data Contract (Cross-Doc)
 Use these fields consistently across Discord logs, LLM telemetry, and Obsidian notes:
-- `request_id`
-- `project_id`
-- `workflow_domain`
-- `owner` or `requester`
-- `status`
-- `timestamp_utc`
-- `model_class` and `model_name` (when applicable)
-- `input_tokens` / `output_tokens` / `estimated_cost` (LLM executions)
-- `reference` (link to note/runbook/output)
+- **request_id**
+- **project_id**
+- **workflow_domain**
+- **owner** or **requester**
+- **status**
+- **timestamp_utc**
+- **model_class** and **model_name** (when applicable)
+- **input_tokens** / **output_tokens** / **estimated_cost** (LLM executions)
+- **reference** (link to note/runbook/output)
 
 > **Plain-English Note:** Using the same core fields across systems makes tracing and recovery much faster.
 
 ## 5. Naming and Path Standards
 ### 5.1 Discord Channel Naming
-- Product channels: `#prd-<project_id>-marketing|sales|content|analytics`
-- Bookkeeping channels: `#bk-<project_id>-inbox|reconcile|reporting`
-- Research channels: `#res-<project_id>-inbox|topic-<topic>|syntheses`
-- Control channels: `#ctl-openclaw-*`
+- Product channels: **#prd-<project_id>-marketing|sales|content|analytics**
+- Bookkeeping channels: **#bk-<project_id>-inbox|reconcile|reporting**
+- Research channels: **#res-<project_id>-inbox|topic-<topic>|syntheses**
+- Control channels: **#ctl-openclaw-***
 
 ### 5.2 Obsidian Vault Mapping (v1)
-- Idea artifacts: `02-Ideas/<project_id>/`
-- Research artifacts: `08-Research/<year>/<project_id>/`
-- Operational change logs: `07-Operations/Change-Records/<project_id>/`
-- Recovery drill evidence: `07-Operations/Recovery-Drills/`
+- Idea artifacts: **02-Ideas/<project_id>/**
+- Research artifacts: **08-Research/<year>/<project_id>/**
+- Operational change logs: **07-Operations/Change-Records/<project_id>/**
+- Recovery drill evidence: **07-Operations/Recovery-Drills/**
 
 ### 5.3 Internet Research Tier Quick Map
 | Channel Family | Default Tier | Notes |
 |---|---|---|
-| `#bk-*` | R1 | Metadata/snippet-level retrieval only |
-| `#prd-*-analytics` | R1 | Low-cost, bounded data retrieval |
-| `#prd-*-marketing|sales|content` | R2 | Controlled full-page retrieval |
-| `#res-*` | R2 | Deep research by default |
-| `#res-*` (elevated) | R3 | Requires explicit Owner approval |
-| `#ctl-*` | Restricted | Policy-limited retrieval only |
+| **#bk-*** | R1 | Metadata/snippet-level retrieval only |
+| **#prd-*-analytics** | R1 | Low-cost, bounded data retrieval |
+| **#prd-*-marketing|sales|content** | R2 | Controlled full-page retrieval |
+| **#res-*** | R2 | Deep research by default |
+| **#res-*** (elevated) | R3 | Requires explicit Owner approval |
+| **#ctl-*** | Restricted | Policy-limited retrieval only |
 
 ## 6. RACI Snapshot (Who Owns What)
 | Area | Owner | Operator | Reviewer |
@@ -143,7 +146,7 @@ Use these fields consistently across Discord logs, LLM telemetry, and Obsidian n
 6. Log outcome and references in Obsidian change records.
 
 ## 9. Interoperability Health Checklist
-- [ ] Channel naming follows the `project_id` pattern.
+- [ ] Channel naming follows the **project_id** pattern.
 - [ ] Each active channel family maps to an Obsidian path.
 - [ ] Each workflow domain maps to a default LLM class.
 - [ ] Escalation and fallback are configured and tested.
@@ -156,12 +159,13 @@ Use these fields consistently across Discord logs, LLM telemetry, and Obsidian n
 
 ## 10. Current Status Notes
 - Document orchestration links exist across Discord, LLM, and Obsidian guides.
-- Discord and Obsidian path placeholders have been aligned to `project_id` and vault v1 structure.
+- Discord and Obsidian path placeholders have been aligned to **project_id** and vault v1 structure.
 - Remaining work is execution readiness (creating starter MOCs/notes and running first drill).
 
 ## 11. Revision History
 | Date | Version | Change |
 |---|---|---|
+| 2026-02-23 | 1.1.8 | Added AOS Project Startup Guide for standardized new-project onboarding |
 | 2026-02-23 | 1.1.7 | Renamed document title to "OpenClaw Agentic Operating System Master Index" for project-name consistency |
 | 2026-02-23 | 1.1.6 | Added explicit OpenClaw orchestration-runtime role statement to Executive Summary |
 | 2026-02-23 | 1.1.5 | Added concrete "How it works in practice" scenario for product campaign research-to-action flow |

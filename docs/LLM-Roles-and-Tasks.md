@@ -120,17 +120,17 @@ Before Class C execution, verify:
 
 ## 8. Logging and FinOps Telemetry
 Every LLM execution record should include:
-- `request_id`
-- `project_id`
-- `workflow_domain`
-- `model_class`
-- `model_name`
-- `input_tokens`
-- `output_tokens`
-- `estimated_cost`
-- `latency_ms`
-- `status`
-- `escalated_from` (if any)
+- **request_id**
+- **project_id**
+- **workflow_domain**
+- **model_class**
+- **model_name**
+- **input_tokens**
+- **output_tokens**
+- **estimated_cost**
+- **latency_ms**
+- **status**
+- **escalated_from** (if any)
 
 > **Plain-English Note:** If you do not log costs and outcomes together, you cannot optimize spend effectively.
 
@@ -146,7 +146,7 @@ Track and review:
 ## 10. Governance Cadence
 - **Daily:** budget threshold alerts and anomaly checks.
 - **Weekly:** top-cost workflows, escalation analysis, optimization actions.
-- **Monthly:** policy retuning (caps, routing, quality thresholds) and `openclaw security audit --deep` review.
+- **Monthly:** policy retuning (caps, routing, quality thresholds) and **openclaw security audit --deep** review.
 - **Quarterly:** strategic vendor/model portfolio review.
 
 ## 11. LLM Incident Triggers
@@ -227,15 +227,15 @@ Use staged retrieval to improve quality and control costs:
 
 ### 15.7 Telemetry Requirements (Research Runs)
 Research runs must log:
-- `request_id`
-- `project_id`
-- `workflow_domain`
-- `model_class` / `model_name`
-- `context_window_percent`
-- `input_tokens` / `output_tokens` / `estimated_cost`
-- `sources_fetched_count`
-- `source_domains`
-- `status`
+- **request_id**
+- **project_id**
+- **workflow_domain**
+- **model_class** / **model_name**
+- **context_window_percent**
+- **input_tokens** / **output_tokens** / **estimated_cost**
+- **sources_fetched_count**
+- **source_domains**
+- **status**
 
 ### 15.8 Operational Checklist (Internet Research)
 - [ ] Research channels requiring internet access are explicitly allowlisted.

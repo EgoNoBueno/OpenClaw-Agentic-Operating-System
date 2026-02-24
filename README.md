@@ -17,6 +17,7 @@ OpenClaw is the system orchestration runtime: it turns governed intent into exec
 1. Open `docs/OpenClaw-Agentic-Operating-System-Build-Procedure.md`.
 2. Replace placeholder values with your environment details.
 3. Keep the verification and rollback sections updated for every revision.
+4. For any new initiative, start with `docs/Project-Startup-Guide.md` to reference all required AOS documents.
 
 ## Notes
 - This workspace is documentation-focused and has no build/compile step.

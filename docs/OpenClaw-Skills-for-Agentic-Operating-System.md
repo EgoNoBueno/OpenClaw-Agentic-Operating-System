@@ -26,7 +26,7 @@ Every skill must align with all three AOS planes:
 Hard requirements:
 - One skill = one primary business function.
 - Structured inputs and outputs only.
-- Idempotent execution using `request_id`.
+- Idempotent execution using **request_id**.
 - Explicit risk tier and approval requirement.
 - Skill/plugin sources must be trusted and explicitly allowlisted.
 - Filesystem/tool actions should be workspace-scoped by default.
@@ -143,19 +143,19 @@ A skill is production-ready only when all are true:
 ### 7.1 Bookkeeping Reconciliation Skill
 - Domain: bookkeeping
 - Default model class: A
-- Allowed channels: `#bk-<project_id>-reconcile`
+- Allowed channels: **#bk-<project_id>-reconcile**
 - Output: reconciliation summary + discrepancy list + Obsidian note reference
 
 ### 7.2 Product Campaign KPI Digest Skill
 - Domain: product
 - Default model class: A/B
-- Allowed channels: `#prd-<project_id>-analytics`
+- Allowed channels: **#prd-<project_id>-analytics**
 - Output: KPI delta digest + next campaign recommendation + Obsidian reference
 
 ### 7.3 Research Synthesis Skill
 - Domain: research
 - Default model class: B, escalates to C on complexity
-- Allowed channels: `#res-topic-<topic>`, `#res-syntheses`
+- Allowed channels: **#res-topic-<topic>**, **#res-syntheses**
 - Output: structured synthesis note + cited assumptions + next-stage proposal
 
 ## 8. Cost and Risk Guardrails
@@ -177,7 +177,7 @@ Track per skill version:
 On failure:
 1. Emit structured error payload.
 2. Write incident/failed-run artifact to Obsidian.
-3. Post actionable message to Discord with `request_id` and next steps.
+3. Post actionable message to Discord with **request_id** and next steps.
 4. If threshold exceeded, open incident workflow.
 
 ## 11. Anti-Patterns to Avoid

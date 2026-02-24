@@ -76,7 +76,7 @@ This SOP does not cover:
 - Optional Obsidian REST API key
 - Any model/provider API keys if used
 
-Store all secrets in `.env` files only. Never commit secrets.
+Store all secrets in **.env** files only. Never commit secrets.
 
 > **Plain-English Note:** A "secret" is like a password for apps. If leaked, someone else could control your bot or spend your API credits.
 
@@ -98,7 +98,7 @@ Store all secrets in `.env` files only. Never commit secrets.
 - Enforce per-channel/user allowlists for command execution.
 - For shared or less-trusted channels, run non-main sessions in sandboxed mode.
 - Treat workspace memory and plugin code as trusted-operator boundary (not sandbox).
-- Run `openclaw security audit --deep` after initial setup and on a recurring schedule.
+- Run **openclaw security audit --deep** after initial setup and on a recurring schedule.
 
 ## 5. Input Record (Fill Before Work)
 | Item | Value |
@@ -122,18 +122,18 @@ Store all secrets in `.env` files only. Never commit secrets.
 
 ### Actions
 1. SSH to VPS as root and patch system:
-	- `apt update && apt upgrade -y`
+	- **apt update && apt upgrade -y**
 2. Create operational user and grant sudo:
-	- `adduser openclaw`
-	- `usermod -aG sudo openclaw`
+	- **adduser openclaw**
+	- **usermod -aG sudo openclaw**
 3. Install baseline packages:
-	- `apt install -y git curl ca-certificates`
-4. Install Node.js 22.x and pnpm as `openclaw` user.
+	- **apt install -y git curl ca-certificates**
+4. Install Node.js 22.x and pnpm as **openclaw** user.
 
 ### Validation Gate A
-- `node -v` returns 22.x
-- `pnpm -v` returns installed version
-- `id openclaw` shows sudo group membership
+- **node -v** returns 22.x
+- **pnpm -v** returns installed version
+- **id openclaw** shows sudo group membership
 
 > **Plain-English Note:** A validation gate is a checkpoint. Don’t continue until each checkpoint passes.
 
@@ -177,7 +177,7 @@ Store all secrets in `.env` files only. Never commit secrets.
 4. Configure Windows firewall inbound rule for required local ports, scoped to private/Tailscale profile only.
 
 ### Validation Gate C
-- From VPS, `curl http://<LOCAL-TAILSCALE-IP>:11434` returns Ollama service response.
+- From VPS, **curl http://<LOCAL-TAILSCALE-IP>:11434** returns Ollama service response.
 - Inference test call returns model output.
 - Endpoint is not exposed publicly.
 
@@ -195,7 +195,7 @@ Store all secrets in `.env` files only. Never commit secrets.
 1. Create bot application in Discord Developer Portal.
 2. Enable required intents (including Message Content Intent where needed).
 3. Invite bot to target server with minimal required permissions.
-4. Record bot token and channel IDs in secure `.env` on VPS.
+4. Record bot token and channel IDs in secure **.env** on VPS.
 5. Configure user-ID allowlist in OpenClaw logic.
 
 ### Validation Gate D
@@ -214,21 +214,21 @@ Store all secrets in `.env` files only. Never commit secrets.
 > **Why this phase matters:** This installs the app and connects all parts (Discord, OpenClaw, Ollama) into one working system.
 
 ### Actions
-1. As `openclaw` user, clone repository:
-	- `git clone https://github.com/OpenClaw/OpenClaw.git`
+1. As **openclaw** user, clone repository:
+	- **git clone https://github.com/OpenClaw/OpenClaw.git**
 2. Install/build:
-	- `pnpm install`
-	- `pnpm run build`
+	- **pnpm install**
+	- **pnpm run build**
 3. Run wizard/config with these mandatory choices:
 	- Messenger: **Discord only**
 	- LLM provider: **Ollama**
-	- Ollama endpoint: `http://<LOCAL-TAILSCALE-IP>:11434`
-4. Populate `.env` and verify no secrets in tracked files.
+	- Ollama endpoint: **http://<LOCAL-TAILSCALE-IP>:11434**
+4. Populate **.env** and verify no secrets in tracked files.
 5. Apply security configuration baseline:
-	- Keep `gateway.bind` set to loopback.
+	- Keep **gateway.bind** set to loopback.
 	- Keep Discord DM policy in pairing mode unless explicitly justified.
 	- Configure allowlists for trusted users/channels.
-	- Run initial `openclaw security audit --deep` and resolve high-risk findings.
+	- Run initial **openclaw security audit --deep** and resolve high-risk findings.
 
 ### Validation Gate E
 - Startup completes without fatal errors.
@@ -238,7 +238,7 @@ Store all secrets in `.env` files only. Never commit secrets.
 > **Plain-English Note:** A "round-trip" test confirms the full chain works end-to-end, not just one isolated part.
 
 ### Rollback E
-- Restore previous known-good config and `.env` backup.
+- Restore previous known-good config and **.env** backup.
 - Re-run wizard/config and validate again.
 
 ## 11. Phase F - Service Hardening and Operations
@@ -248,7 +248,8 @@ Store all secrets in `.env` files only. Never commit secrets.
 ### Actions
 1. Create systemd service for OpenClaw with auto-restart policy.
 2. Enable service at boot.
-3. Configure centralized logging (`journalctl` baseline) and retention policy.
+
+3. Configure centralized logging (**journalctl** baseline) and retention policy.
 4. Define patch cadence:
 	- OS updates
 	- Node/pnpm runtime updates
@@ -263,6 +264,7 @@ Store all secrets in `.env` files only. Never commit secrets.
 > **Plain-English Note:** If your service cannot recover from reboot/crash, it is not production-ready.
 
 ### Rollback F
+
 - Disable new unit/service and revert to prior known-good unit file.
 - Restore previous package/runtime versions if update introduces regressions.
 
@@ -271,12 +273,12 @@ Store all secrets in `.env` files only. Never commit secrets.
 - [ ] VPS and local node communicate only through trusted network path
 - [ ] Ollama endpoint reachable from VPS and not publicly exposed
 - [ ] User allowlist enforcement confirmed
-- [ ] Secrets stored only in `.env` and excluded from version control
+- [ ] Secrets stored only in **.env** and excluded from version control
 - [ ] Service persistence and reboot recovery verified
 - [ ] Runbook tested end-to-end with one real command flow
 - [ ] Gateway bind is loopback-only and remote access is tunnel/tailnet-based
 - [ ] Discord DM policy and allowlists validated in production config
-- [ ] `openclaw security audit --deep` completed with no unresolved critical findings
+- [ ] **openclaw security audit --deep** completed with no unresolved critical findings
 - [ ] Sandbox policy for non-main/shared sessions is documented and tested
 
 > **Plain-English Note:** Go-live means "safe to use for real work." Every checkbox should be true first.
@@ -295,8 +297,8 @@ Store all secrets in `.env` files only. Never commit secrets.
 | Symptom | Likely Cause | Check | Fix |
 |---|---|---|---|
 | Bot offline in Discord | Token/intent/config error | Service logs + Discord portal settings | Correct token/intents and restart service |
-| No LLM responses | Ollama unreachable | `curl` to Ollama endpoint from VPS | Fix bind/firewall/Tailscale route |
-| Works then stops after reboot | Service not enabled | `systemctl status` and `is-enabled` | Enable unit and validate boot start |
+| No LLM responses | Ollama unreachable | **curl** to Ollama endpoint from VPS | Fix bind/firewall/Tailscale route |
+| Works then stops after reboot | Service not enabled | **systemctl status** and **is-enabled** | Enable unit and validate boot start |
 | Unauthorized command execution | Allowlist misconfigured | Auth/ACL logs | Correct allowed user ID list |
 
 > **Plain-English Note:** Use this table like a diagnosis chart: find the symptom first, then follow the check/fix path.
@@ -315,16 +317,16 @@ Store all secrets in `.env` files only. Never commit secrets.
 | Gateway | The part that receives requests and routes them to the right place. |
 | Inference | The AI model generating an answer from your prompt. |
 | Ollama | Software that runs AI models on your machine. |
-| Endpoint | A network address another app can call (like `http://ip:port`). |
-| Port | A numbered network door used by an app (example: `11434`). |
+| Endpoint | A network address another app can call (like **http://ip:port**). |
+| Port | A numbered network door used by an app (example: **11434**). |
 | Tailscale | A private mesh VPN that securely connects devices. |
 | MagicDNS | A Tailscale feature that lets you use names instead of IP numbers. |
 | ACL | Access Control List; rules for who can connect to what. |
-| `.env` file | A file used to store secrets and config values safely. |
+| **.env** file | A file used to store secrets and config values safely. |
 | Token | A secret key that proves your app is allowed to use a service. |
 | Allowlist | A list of approved users or systems that are allowed access. |
 | systemd | Linux service manager used to auto-start and monitor apps. |
-| `journalctl` | Command used to view logs from Linux services. |
+| **journalctl** | Command used to view logs from Linux services. |
 | Rollback | Returning to a previous working setup after a failure. |
 | Validation Gate | A checkpoint to verify a phase worked before moving on. |
 
@@ -338,21 +340,21 @@ Store all secrets in `.env` files only. Never commit secrets.
 | CLI | Command-Line Interface | Text-based way to control a computer with typed commands. |
 | API | Application Programming Interface | A defined way for one program to talk to another. |
 | ID | Identifier | A unique value used to recognize a user, bot, or resource. |
-| URL | Uniform Resource Locator | A web/network address like `http://host:port`. |
+| URL | Uniform Resource Locator | A web/network address like **http://host:port**. |
 
 ### Command Examples from This SOP
 | Command | What It Does | Why You Use It Here |
 |---|---|---|
-| `apt update && apt upgrade -y` | Refreshes package lists and installs updates. | Makes sure the VPS starts from a patched, safer baseline. |
-| `adduser openclaw` | Creates a new Linux user account. | Avoids running the whole bot stack as root. |
-| `usermod -aG sudo openclaw` | Adds the `openclaw` user to the sudo group. | Lets that user run admin tasks when needed. |
-| `git clone https://github.com/OpenClaw/OpenClaw.git` | Downloads the OpenClaw code repository. | Gets the application onto the VPS for installation. |
-| `pnpm install` | Installs project dependencies. | Prepares OpenClaw to build and run. |
-| `pnpm run build` | Compiles/builds the project. | Produces the runnable app artifacts. |
-| `curl http://<LOCAL-TAILSCALE-IP>:11434` | Sends a test request to Ollama. | Confirms VPS can reach your local inference service. |
-| `systemctl status <service>` | Shows service health and state. | Verifies OpenClaw service is running correctly. |
-| `journalctl -u <service>` | Shows logs for one Linux service. | Helps troubleshoot startup/auth/connectivity issues. |
-| `ssh <user>@<server-ip>` | Opens a secure remote shell session. | Connects you to the VPS to perform setup and operations. |
+| **apt update && apt upgrade -y** | Refreshes package lists and installs updates. | Makes sure the VPS starts from a patched, safer baseline. |
+| **adduser openclaw** | Creates a new Linux user account. | Avoids running the whole bot stack as root. |
+| **usermod -aG sudo openclaw** | Adds the **openclaw** user to the sudo group. | Lets that user run admin tasks when needed. |
+| **git clone https://github.com/OpenClaw/OpenClaw.git** | Downloads the OpenClaw code repository. | Gets the application onto the VPS for installation. |
+| **pnpm install** | Installs project dependencies. | Prepares OpenClaw to build and run. |
+| **pnpm run build** | Compiles/builds the project. | Produces the runnable app artifacts. |
+| **curl http://<LOCAL-TAILSCALE-IP>:11434** | Sends a test request to Ollama. | Confirms VPS can reach your local inference service. |
+| **systemctl status <service>** | Shows service health and state. | Verifies OpenClaw service is running correctly. |
+| **journalctl -u <service>** | Shows logs for one Linux service. | Helps troubleshoot startup/auth/connectivity issues. |
+| **ssh <user>@<server-ip>** | Opens a secure remote shell session. | Connects you to the VPS to perform setup and operations. |
 
 ## 17. Informational Notes (Optional but Useful)
 
@@ -388,20 +390,20 @@ These controls are required so the full system works smoothly across components.
 
 ### 18.1 Shared Metadata Contract
 Each executed workflow should carry:
-- `request_id`
-- `project_id`
-- `workflow_domain`
-- `owner` or `requester`
-- `status`
-- `timestamp_utc`
-- `reference` (Obsidian artifact or runbook link)
+- **request_id**
+- **project_id**
+- **workflow_domain**
+- **owner** or **requester**
+- **status**
+- **timestamp_utc**
+- **reference** (Obsidian artifact or runbook link)
 
 For LLM-executed tasks also include:
-- `model_class`
-- `model_name`
-- `input_tokens`
-- `output_tokens`
-- `estimated_cost`
+- **model_class**
+- **model_name**
+- **input_tokens**
+- **output_tokens**
+- **estimated_cost**
 
 ### 18.2 Channel and Path Standards
 - Discord channel names must use project-scoped patterns from the Discord roles guide.

@@ -21,7 +21,7 @@ OpenClaw should write or sync:
 - Prompt templates and approved system personas
 
 OpenClaw should not write:
-- Raw secrets (`.env` values, tokens, private keys)
+- Raw secrets (**.env** values, tokens, private keys)
 - Full sensitive logs with credentials
 - Unfiltered private personal data
 
@@ -68,21 +68,21 @@ Vault/
 ### 5.1 Research Capture Workflow
 1. User requests research in Discord.
 2. OpenClaw gathers and summarizes findings.
-3. OpenClaw writes a markdown report into `Research/<year>/`.
+3. OpenClaw writes a markdown report into **Research/<year>/**.
 4. OpenClaw posts a completion message with file path.
 
 **Output:** A timestamped markdown report with source notes and summary.
 
 ### 5.2 Operations Log Workflow
 1. OpenClaw completes a major action (deploy, restart, config change).
-2. OpenClaw appends a short entry to `Operations/Daily-Logs/`.
+2. OpenClaw appends a short entry to **Operations/Daily-Logs/**.
 3. Entry includes actor, action, result, and follow-up if needed.
 
 **Output:** Auditable daily event trail.
 
 ### 5.3 Incident Workflow
 1. Failure is detected (bot offline, Ollama unreachable, auth failure).
-2. OpenClaw creates incident note in `Operations/Incident-Reports/`.
+2. OpenClaw creates incident note in **Operations/Incident-Reports/**.
 3. Note captures impact, timeline, root cause, and fix.
 4. Post-incident actions are tracked until closed.
 
@@ -90,12 +90,12 @@ Vault/
 
 ## 6. Data Quality Rules for Notes
 Every automated note should include:
-- `Title`
-- `Date/Time (UTC)`
-- `Trigger/Request`
-- `Action Taken`
-- `Result`
-- `Next Step` (if any)
+- **Title**
+- **Date/Time (UTC)**
+- **Trigger/Request**
+- **Action Taken**
+- **Result**
+- **Next Step** (if any)
 
 > **Plain-English Note:** Consistent note format makes searching and troubleshooting much easier.
 
@@ -108,7 +108,7 @@ Recommended pattern:
 - Write note -> validate content -> sync/commit -> notify Discord.
 
 ## 8. Security and Privacy Guardrails
-- Keep API keys outside notes and in `.env` only.
+- Keep API keys outside notes and in **.env** only.
 - Redact sensitive values before writing logs.
 - Restrict Obsidian API access to trusted network paths (Tailscale/private).
 - Use private repositories for vault backups.
@@ -171,10 +171,10 @@ Vault/
 ```
 
 Tag model (examples):
-- Domain tags: `#domain/openclaw`, `#domain/ops`, `#domain/research`
-- Type tags: `#type/idea`, `#type/sop`, `#type/prompt`, `#type/system`, `#type/schema`
-- Status tags: `#status/draft`, `#status/active`, `#status/deprecated`
-- Criticality tags: `#tier/t1`, `#tier/t2`, `#tier/t3`
+- Domain tags: **#domain/openclaw**, **#domain/ops**, **#domain/research**
+- Type tags: **#type/idea**, **#type/sop**, **#type/prompt**, **#type/system**, **#type/schema**
+- Status tags: **#status/draft**, **#status/active**, **#status/deprecated**
+- Criticality tags: **#tier/t1**, **#tier/t2**, **#tier/t3**
 
 > **Plain-English Note:** Tags should be short and predictable so search and Dataview queries stay clean.
 
@@ -182,30 +182,30 @@ Tag model (examples):
 Use this property schema on all operational notes.
 
 Common required fields:
-- `id`
-- `type`
-- `title`
-- `status`
-- `owner`
-- `created_utc`
-- `updated_utc`
-- `tags`
-- `related_systems`
-- `dependencies`
-- `inputs`
-- `outputs`
-- `recovery_tier`
+- **id**
+- **type**
+- **title**
+- **status**
+- **owner**
+- **created_utc**
+- **updated_utc**
+- **tags**
+- **related_systems**
+- **dependencies**
+- **inputs**
+- **outputs**
+- **recovery_tier**
 
 Optional but recommended:
-- `runbook_ref`
-- `prompt_ref`
-- `schema_ref`
-- `last_tested_utc`
-- `review_cycle_days`
+- **runbook_ref**
+- **prompt_ref**
+- **schema_ref**
+- **last_tested_utc**
+- **review_cycle_days**
 
 ### 12.4 Note-Type Templates (Machine-Ready)
 
-#### Business Idea Note (`02-Ideas/`)
+#### Business Idea Note (**02-Ideas/**)
 ```yaml
 ---
 id: IDEA-0001
@@ -228,7 +228,7 @@ review_cycle_days: 30
 ---
 ```
 
-#### SOP Note (`03-SOPs/`)
+#### SOP Note (**03-SOPs/**)
 ```yaml
 ---
 id: SOP-1001
@@ -249,7 +249,7 @@ review_cycle_days: 14
 ---
 ```
 
-#### Prompt Template Note (`04-Prompts/`)
+#### Prompt Template Note (**04-Prompts/**)
 ```yaml
 ---
 id: PRM-2001
@@ -270,7 +270,7 @@ review_cycle_days: 30
 ---
 ```
 
-#### System Note (`05-Systems/`)
+#### System Note (**05-Systems/**)
 ```yaml
 ---
 id: SYS-4001
@@ -293,14 +293,14 @@ review_cycle_days: 14
 
 ### 12.5 MOC Strategy (Manual Index Notes)
 Create a MOC for each major domain:
-- `01-MOCs/MOC-OpenClaw-Architecture.md`
-- `01-MOCs/MOC-Operations.md`
-- `01-MOCs/MOC-Prompts-and-Automation.md`
-- `01-MOCs/MOC-Recovery-Readiness.md`
+- **01-MOCs/MOC-OpenClaw-Architecture.md**
+- **01-MOCs/MOC-Operations.md**
+- **01-MOCs/MOC-Prompts-and-Automation.md**
+- **01-MOCs/MOC-Recovery-Readiness.md**
 
 Each MOC should contain:
 - Scope statement
-- Key links (`[[...]]`) to Ideas, SOPs, Prompts, Systems, Schemas
+- Key links (**[[...]]**) to Ideas, SOPs, Prompts, Systems, Schemas
 - "Current Priority" block
 - "Gaps / Missing Docs" block
 
@@ -308,13 +308,13 @@ Each MOC should contain:
 
 ### 12.6 Internal Linking Pattern
 Use explicit links in note bodies to map logic chains:
-- Idea -> SOP: `[[SOP-1001 Incident Response and Recovery]]`
-- SOP -> Prompt: `[[PRM-2001 Incident Summary Prompt]]`
-- SOP -> Schema: `[[SCH-3001 Incident Note Schema]]`
-- SOP -> System: `[[SYS-4001 OpenClaw Gateway on VPS]]`
+- Idea -> SOP: **[[SOP-1001 Incident Response and Recovery]]**
+- SOP -> Prompt: **[[PRM-2001 Incident Summary Prompt]]**
+- SOP -> Schema: **[[SCH-3001 Incident Note Schema]]**
+- SOP -> System: **[[SYS-4001 OpenClaw Gateway on VPS]]**
 
 Relationship sentence pattern:
-- `This workflow executes through [[SYS-4001 OpenClaw Gateway on VPS]] using prompt [[PRM-2001 Incident Summary Prompt]] and writes output in schema [[SCH-3001 Incident Note Schema]].`
+- **This workflow executes through [[SYS-4001 OpenClaw Gateway on VPS]] using prompt [[PRM-2001 Incident Summary Prompt]] and writes output in schema [[SCH-3001 Incident Note Schema]].**
 
 ### 12.7 Dataview Queries (Self-Indexing Views)
 
@@ -351,23 +351,23 @@ SORT file.name ASC
 ```
 
 ### 12.8 Documentation-First Operating Workflow
-1. Capture raw thought in `00-Inbox`.
+1. Capture raw thought in **00-Inbox**.
 2. Classify note type (Idea/SOP/Prompt/System/Schema).
 3. Add required YAML fields.
 4. Add internal links to related artifacts.
 5. Move note into its target folder.
 6. Validate with Dataview missing-fields query.
 7. Update relevant MOC index pages.
-8. Mark status (`draft` -> `active`) after review.
+8. Mark status (**draft** -> **active**) after review.
 
 ### 12.9 Governance Rules
-- Naming: `<TYPE>-<ID> <Short Title>` for operational notes.
-- Status lifecycle: `draft` -> `active` -> `deprecated` -> `archived`.
+- Naming: **<TYPE>-<ID> <Short Title>** for operational notes.
+- Status lifecycle: **draft** -> **active** -> **deprecated** -> **archived**.
 - Required review cadence:
   - Tier 1: every 14 days
   - Tier 2: every 30 days
   - Tier 3: every 90 days
-- No unreviewed Tier 1 note may stay `draft` more than 7 days.
+- No unreviewed Tier 1 note may stay **draft** more than 7 days.
 
 ### 12.10 Recovery Drill Procedure (AI Disaster Recovery Test)
 Run monthly and after major architecture changes.
@@ -381,7 +381,7 @@ Steps:
 2. Use MOC + Dataview to identify required SOP, Prompt, Schema, and System notes.
 3. Reconstruct execution order from links and metadata.
 4. Run one end-to-end test.
-5. Record gaps and corrective actions in `07-Operations/Recovery-Drills/`.
+5. Record gaps and corrective actions in **07-Operations/Recovery-Drills/**.
 
 Pass/Fail Criteria:
 - **Pass** when all are true:
@@ -443,7 +443,7 @@ Archive older snapshots to cold storage if needed.
 #### 12.12.6 Security Controls for Backups
 - Use private repositories for Git backups.
 - Encrypt offsite archives.
-- Keep backup credentials outside notes and in `.env`/secret manager only.
+- Keep backup credentials outside notes and in **.env**/secret manager only.
 - Restrict backup write paths to trusted hosts.
 
 #### 12.12.7 Restore Test Procedure
@@ -452,7 +452,7 @@ Run this monthly:
 2. Restore vault to a clean test location.
 3. Verify MOCs, Dataview queries, and linked notes resolve correctly.
 4. Rebuild one Tier 1 workflow from vault docs only.
-5. Record evidence and duration in `07-Operations/Recovery-Drills/`.
+5. Record evidence and duration in **07-Operations/Recovery-Drills/**.
 
 Pass criteria:
 - Restore completes within RTO.
@@ -485,7 +485,7 @@ Pruning safeguards:
 - Never delete the most recent successful backup.
 - Never prune a period unless at least one newer verified restore point exists.
 - Perform prune only after backup creation + integrity check completes.
-- Log all prune actions in `07-Operations/Change-Records/`.
+- Log all prune actions in **07-Operations/Change-Records/**.
 
 Storage hygiene rules:
 - Exclude temporary/cache/trash folders from archive scope where safe.

@@ -20,7 +20,7 @@ Execute in this order to ensure consistent evidence collection.
 
 ### Step 1: Gateway Exposure Check
 - Verify gateway bind is loopback-only.
-- Confirm no unintended public bind (`0.0.0.0`) is active.
+- Confirm no unintended public bind (**0.0.0.0**) is active.
 - Validate remote access path is SSH tunnel or tailnet-based.
 
 **Pass Criteria**
@@ -52,7 +52,7 @@ Execute in this order to ensure consistent evidence collection.
 - Sandbox rules match policy for shared/non-main sessions.
 
 ### Step 5: Security Audit Execution
-- Run `openclaw security audit --deep`.
+- Run **openclaw security audit --deep**.
 - Capture findings and classify severity.
 - Confirm critical findings have immediate mitigation plan.
 
@@ -60,7 +60,7 @@ Execute in this order to ensure consistent evidence collection.
 - No unresolved critical findings.
 
 ### Step 6: Secrets and Token Hygiene
-- Confirm tokens/secrets are in `.env` or approved secret store only.
+- Confirm tokens/secrets are in **.env** or approved secret store only.
 - Confirm no secrets are present in notes, docs, or source-controlled config.
 - Validate token rotation readiness and last rotation date.
 
@@ -68,7 +68,7 @@ Execute in this order to ensure consistent evidence collection.
 - Secret handling policy is fully compliant.
 
 ### Step 7: Logging and Evidence Integrity
-- Confirm required telemetry fields exist (`request_id`, `project_id`, `workflow_domain`, status, timestamps, model/cost fields where applicable).
+- Confirm required telemetry fields exist (**request_id**, **project_id**, **workflow_domain**, status, timestamps, model/cost fields where applicable).
 - Confirm incident and change records are persisted to Obsidian.
 
 **Pass Criteria**
