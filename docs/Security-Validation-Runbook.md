@@ -54,11 +54,14 @@ Execute in this order to ensure consistent evidence collection.
 
 ### Step 5: Security Audit Execution
 - Run **openclaw security audit --deep**.
+- Verify deployed OpenClaw version is **2026.2.23** or later.
+- Review latest OpenClaw security advisories and confirm no unpatched High/Critical findings apply to deployed version.
 - Capture findings and classify severity.
 - Confirm critical findings have immediate mitigation plan.
 
 **Pass Criteria**
 - No unresolved critical findings.
+- Deployed version is at or above the current patched minimum for published advisories.
 
 ### Step 6: Secrets and Token Hygiene
 - Confirm tokens/secrets are in **.env** or approved secret store only.
@@ -77,6 +80,7 @@ Execute in this order to ensure consistent evidence collection.
 
 ## 5. Evidence to Capture
 - Command output snippets (including security audit)
+- OpenClaw version output (**openclaw --version**) and advisory review date
 - Config screenshots or sanitized config excerpts
 - Allowlist review record
 - Sandbox policy verification record
@@ -138,5 +142,6 @@ Execute in this order to ensure consistent evidence collection.
 ## 10. Revision History
 | Date | Version | Change |
 |---|---|---|
+| 2026-02-24 | 1.1.1 | Added explicit OpenClaw minimum patched-version check and latest-advisory verification step |
 | 2026-02-24 | 1.1.0 | Added explicit Windows-host Ollama exposure validation to Step 1 for native-Windows inference architecture alignment |
 | 2026-02-23 | 1.0.0 | Initial monthly security validation runbook for OpenClaw Agentic Operating System |

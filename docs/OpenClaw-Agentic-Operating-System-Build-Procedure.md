@@ -2,7 +2,7 @@
 
 ## Document Control
 - **Owner:**
-- **Version:** 1.3.0
+- **Version:** 1.3.1
 - **Last Updated:** 2026-02-24
 - **Status:** Draft
 
@@ -72,7 +72,7 @@ This SOP does not cover:
 | Ubuntu (VPS) | 24.04 LTS |
 | Node.js | 22.12.0+ LTS |
 | pnpm | latest stable |
-| OpenClaw | current stable repository default branch |
+| OpenClaw | 2026.2.23+ (or latest patched stable) |
 | Windows (Local Host) | Windows 11 (current stable) |
 | Ollama | latest stable |
 
@@ -527,6 +527,7 @@ Each test must complete the full handshake and produce valid artifact references
 ## 20. Revision History
 | Date | Version | Author | Change |
 |---|---|---|---|
+| 2026-02-24 | 1.3.1 | | Set explicit minimum OpenClaw version baseline to 2026.2.23+ for current security advisory coverage |
 | 2026-02-24 | 1.3.0 | | Migrated architecture references from WSL2 inference host to native Windows Ollama host across objective, topology, phases, glossary, and validation examples |
 | 2026-02-24 | 1.2.7 | | Added explicit rationale for using Windows-host Tailscale over WSL-only in Phase B |
 | 2026-02-24 | 1.2.6 | | Added missing rationale for Phase A Step 4 to complete action-level clarity coverage |
